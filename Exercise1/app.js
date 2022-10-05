@@ -20,6 +20,18 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(function(req,res,next) {
+  // do an authentication here
+  if (req.body.username == "jesse" && req.body.password == "SuperSecretPass") {
+    req.body.token = "SuperSecretToken"; // we write an authorization token
+    next();
+    return;
+  }
+
+  next();
+});
+
+
 app.use('/', indexRouter);
 app.use('/api', apiRouter);
 app.use('/users', usersRouter);
