@@ -21,6 +21,80 @@ var data = [
     { id: 3, name: "Ashton Harlan", occupation: "1st grade student" }
 ]
 
+var chatData = [
+    [
+        { message: "blah" },
+        { message: "blah 2" },
+    ],
+    [
+        { message: "another blah" },
+        { message: "another blah 2" },
+    ]
+]
+
+// chatData[channelId][messageId]
+// chatData[0][0] - returns { message: "blah" }
+// chatData[1][0] - return { message: "another blah" }
+
+var chatDictionary = {
+    "tech": [
+        { message: "blah" },
+        { message: "blah 2" },
+    ],
+    "news": [
+        { message: "another blah" },
+        { message: "another blah 2" },
+    ]
+}
+
+// chatDictionary[channelName][messageId]
+// chatDictionary[tech][0] - returns { message: "blah" }
+// chatDictionary[news][0] - return { message: "another blah" }
+
+
+// mixed version
+var mockDb = [
+    {
+        channelName: "tech",
+        messages: [
+            { message: "blah" },
+            { message: "blah 2" },
+        ]
+    },
+    {
+        channelName: "news",
+        messages: [
+            { message: "another blah" },
+            { message: "another blah 2" },
+        ]
+    }
+]
+
+router.get('/chat/', function(req, res, next) {
+    res.send(mockDb);
+});
+
+router.get('/chat/:channel/', function(req, res, next) {
+    var channelName = req.params.channel;
+
+    var messages = mockDb.filter(function(channel) {
+        return channel.channelName == channelName;
+    })[0].messages;
+
+    res.send(messages);
+});
+
+router.post('/chat/:channel/', function(req, res, next) {
+    var message = req.body;
+    var channelIndex = mockDb.findIndex(function(channel) {
+        return channel.channelName == req.params.channel;
+    });
+
+    mockDb[channelIndex].messages.push(message);
+
+    res.send(mockDb[channelIndex]);
+});
+
 // Exact Route GET /api/users
 // get all users READ
 router.get('/users', function(req, res, next) {
